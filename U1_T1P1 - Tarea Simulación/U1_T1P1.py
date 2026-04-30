@@ -11,8 +11,8 @@ import matplotlib.pyplot as plt
 
 DIAS = 30
 
-DEMANDA_MIN = XX
-DEMANDA_MAX = XXX
+DEMANDA_MIN = 5
+DEMANDA_MAX = 15
 
 CAPACIDAD_FIJA = 10
 
@@ -23,18 +23,25 @@ CAPACIDAD_VAR_MAX = 13
 # FUNCIÓN: generar demanda diaria
 # -------------------------------
 
-def generar_demanda():
-    # TODO: retornar un número entero aleatorio entre DEMANDA_MIN y DEMANDA_MAX
-    pass
+
+def generar_demanda() -> int:
+    '''
+    Retorna un número entero aleatorio
+    entre DEMANDA_MIN y DEMANDA_MAX
+    '''
+    return random.randint(DEMANDA_MIN, DEMANDA_MAX)
 
 
 # -------------------------------
 # FUNCIÓN: generar capacidad variable
 # -------------------------------
 
-def generar_capacidad_variable():
-    # TODO: retornar un número entero aleatorio entre CAPACIDAD_VAR_MIN y CAPACIDAD_VAR_MAX
-    pass
+def generar_capacidad_variable() -> int:
+    '''
+    Retorna un número entero aleatorio entre
+    CAPACIDAD_VAR_MIN y CAPACIDAD_VAR_MAX
+    '''
+    return random.randint(CAPACIDAD_VAR_MIN, CAPACIDAD_VAR_MAX)
 
 
 # -------------------------------
@@ -42,31 +49,40 @@ def generar_capacidad_variable():
 # -------------------------------
 
 def simular(capacidad_fija=True):
-    
+
     backlog = 0
     historial_backlog = []
 
-    for dia in range(1, DIAS + 1):
+    for dia in range(0, DIAS):
 
         # TODO: generar demanda del día
-        demanda = None
+        demanda = generar_demanda()
 
         # TODO: definir capacidad según el escenario
         if capacidad_fija:
-            capacidad = None
+            capacidad = CAPACIDAD_FIJA
         else:
-            capacidad = None
+            capacidad = generar_capacidad_variable()
 
         # TODO: calcular nuevo backlog
         # fórmula: backlog = backlog + demanda - capacidad
-        
+        if historial_backlog is not None and dia > 0:
+            backlog_anterior = historial_backlog[dia - 1]
+        else:
+            backlog_anterior = backlog
+
+        backlog = backlog_anterior + demanda - capacidad
+
         # TODO: evitar backlog negativo
+        backlog = max(0, backlog)
 
         # TODO: guardar backlog en historial
         historial_backlog.append(backlog)
 
         # (opcional) imprimir día a día
-        print(f"Día {dia}: Demanda={demanda}, Capacidad={capacidad}, Backlog={backlog}")
+        print(f"Día {dia}: Demanda={demanda}, \
+            Capacidad={capacidad}, \
+            Backlog={backlog}")
 
     return backlog, historial_backlog
 
@@ -90,7 +106,7 @@ print(f"Backlog final (fijo): {resultado_fijo}")
 print(f"Backlog final (variable): {resultado_variable}")
 
 # -------------------------------
-# GRÁFICO DE HISTORIAL DE BACKLOG 
+# GRÁFICO DE HISTORIAL DE BACKLOG
 # -------------------------------
 
 # TODO: Gráfico de comparación
@@ -107,8 +123,8 @@ plt.show()
 
 # TODO: imprimir conclusión simple
 if resultado_fijo > resultado_variable:
-    print("XXXXXXX")
+    print("La capacidad variable es más eficiente")
 elif resultado_variable > resultado_fijo:
-    print("XXXXXXX")
+    print("La capacidad fija es más eficiente")
 else:
-    print("XXXXXXX")
+    print("Ambas tienen la misma eficiencia")
