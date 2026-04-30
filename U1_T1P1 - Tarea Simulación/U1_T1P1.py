@@ -48,24 +48,27 @@ def generar_capacidad_variable() -> int:
 # FUNCIÓN PRINCIPAL DE SIMULACIÓN
 # -------------------------------
 
-def simular(capacidad_fija=True):
+def simular(capacidad_fija: bool = True) -> tuple[int, list[int]]:
+    '''
+    Ejecuta una simulación de procesamiento de demanda y gestión de backlog
+    durante un periodo determinado de días.
 
+    La función calcula diariamente la acumulación de tareas
+    pendientes (backlog) restando la capacidad de procesamiento
+    a la suma del backlog anterior y la demanda nueva.
+    '''
     backlog = 0
     historial_backlog = []
 
     for dia in range(0, DIAS):
 
-        # TODO: generar demanda del día
         demanda = generar_demanda()
 
-        # TODO: definir capacidad según el escenario
         if capacidad_fija:
             capacidad = CAPACIDAD_FIJA
         else:
             capacidad = generar_capacidad_variable()
 
-        # TODO: calcular nuevo backlog
-        # fórmula: backlog = backlog + demanda - capacidad
         if historial_backlog is not None and dia > 0:
             backlog_anterior = historial_backlog[dia - 1]
         else:
@@ -73,13 +76,10 @@ def simular(capacidad_fija=True):
 
         backlog = backlog_anterior + demanda - capacidad
 
-        # TODO: evitar backlog negativo
         backlog = max(0, backlog)
 
-        # TODO: guardar backlog en historial
         historial_backlog.append(backlog)
 
-        # (opcional) imprimir día a día
         print(f"Día {dia}: Demanda={demanda}, \
             Capacidad={capacidad}, \
             Backlog={backlog}")
@@ -109,8 +109,6 @@ print(f"Backlog final (variable): {resultado_variable}")
 # GRÁFICO DE HISTORIAL DE BACKLOG
 # -------------------------------
 
-# TODO: Gráfico de comparación
-
 plt.figure(figsize=(12, 6))
 plt.plot(historial_fijo, label="Capacidad Fija")
 plt.plot(historial_variable, label="Capacidad Variable")
@@ -121,7 +119,6 @@ plt.legend()
 plt.grid()
 plt.show()
 
-# TODO: imprimir conclusión simple
 if resultado_fijo > resultado_variable:
     print("La capacidad variable es más eficiente")
 elif resultado_variable > resultado_fijo:
